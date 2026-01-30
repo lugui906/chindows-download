@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chindows - 轻量高效的新一代多端融合操作系统，集Windows易用性与Linux稳定性于一体，适配PC、平板、嵌入式设备">
+    <meta name="keywords" content="Chindows,操作系统,轻量,高效,多端,Linux,Windows,开源">
+    <meta name="author" content="Chindows开源团队">
     <title>Chindows - 轻量高效，新一代多端操作系统</title>
     <style>
         * {margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif;}
@@ -11,72 +14,90 @@
         ul {list-style: none;}
         .container {width: 90%; max-width: 1200px; margin: 0 auto;}
         /* 导航栏 */
-        .nav {padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+        .nav {padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.3s ease;}
+        .nav.scrolled {background: rgba(255,255,255,0.98); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
         .nav-logo {font-size: 1.8rem; font-weight: 700; color: var(--primary);}
         .nav-menu {display: flex; gap: 2rem;}
-        .nav-menu a {font-size: 1rem; color: var(--dark); transition: color 0.3s;}
+        .nav-menu a {font-size: 1rem; color: var(--dark); transition: color 0.3s; position: relative;}
         .nav-menu a:hover {color: var(--primary);}
-        .nav-btn {background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 4px; border: none; cursor: pointer; transition: background 0.3s;}
-        .nav-btn:hover {background: var(--secondary);}
-        .mobile-menu {display: none; font-size: 1.5rem; cursor: pointer;}
+        .nav-menu a::after {content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.3s;}
+        .nav-menu a:hover::after {width: 100%;}
+        .nav-btn {background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s; font-weight: 600;}
+        .nav-btn:hover {background: var(--secondary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(22,93,255,0.2);}
+        .mobile-menu {display: none; font-size: 1.5rem; cursor: pointer; z-index: 1000;}
+        .mobile-menu.active i {color: var(--primary);}
         /* Banner区 */
-        .banner {margin-top: 70px; height: calc(100vh - 70px); background: linear-gradient(135deg, var(--light) 0%, #e8f0ff 100%); display: flex; align-items: center;}
-        .banner-content {flex: 1;}
+        .banner {margin-top: 70px; min-height: calc(100vh - 70px); background: linear-gradient(135deg, var(--light) 0%, #e8f0ff 100%); display: flex; align-items: center; padding: 4rem 0;}
+        .banner-content {flex: 1; animation: fadeInLeft 1s ease-out;}
+        @keyframes fadeInLeft {from {opacity: 0; transform: translateX(-30px);} to {opacity: 1; transform: translateX(0);}}
         .banner-title {font-size: 3rem; line-height: 1.3; color: var(--dark); margin-bottom: 1rem;}
         .banner-title span {color: var(--primary);}
         .banner-desc {font-size: 1.2rem; color: var(--gray); line-height: 1.6; margin-bottom: 2rem; max-width: 600px;}
         .banner-btns {display: flex; gap: 1.5rem;}
-        .btn-primary {background: var(--primary); color: white; padding: 0.8rem 2rem; border-radius: 4px; font-size: 1rem; transition: all 0.3s;}
+        .btn-primary {background: var(--primary); color: white; padding: 0.8rem 2rem; border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
         .btn-primary:hover {background: var(--secondary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(22,93,255,0.3);}
-        .btn-outline {background: transparent; color: var(--primary); padding: 0.8rem 2rem; border: 2px solid var(--primary); border-radius: 4px; font-size: 1rem; transition: all 0.3s;}
+        .btn-outline {background: transparent; color: var(--primary); padding: 0.8rem 2rem; border: 2px solid var(--primary); border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
         .btn-outline:hover {background: var(--primary); color: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(22,93,255,0.3);}
-        .banner-img {flex: 1; text-align: right;}
-        .banner-img img {width: 90%; max-width: 500px;}
+        .banner-img {flex: 1; text-align: right; animation: fadeInRight 1s ease-out;}
+        @keyframes fadeInRight {from {opacity: 0; transform: translateX(30px);} to {opacity: 1; transform: translateX(0);}}
+        .banner-img img {width: 90%; max-width: 500px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.5s;}
+        .banner-img img:hover {transform: scale(1.02);}
         /* 核心特性 */
         .features {padding: 8rem 0; background: white;}
-        .section-title {text-align: center; font-size: 2.5rem; color: var(--dark); margin-bottom: 1rem;}
+        .section-title {text-align: center; font-size: 2.5rem; color: var(--dark); margin-bottom: 1rem; position: relative;}
+        .section-title::after {content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--primary); border-radius: 2px;}
         .section-desc {text-align: center; color: var(--gray); font-size: 1.1rem; max-width: 700px; margin: 0 auto 4rem;}
         .features-list {display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;}
-        .feature-card {padding: 2rem; background: var(--light); border-radius: 8px; transition: all 0.3s;}
+        .feature-card {padding: 2rem; background: var(--light); border-radius: 8px; transition: all 0.3s; border: 1px solid rgba(0,0,0,0.05);}
         .feature-card:hover {transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.08);}
-        .feature-card i {font-size: 2.5rem; color: var(--primary); margin-bottom: 1.5rem;}
+        .feature-card i {font-size: 2.5rem; color: var(--primary); margin-bottom: 1.5rem; display: block;}
         .feature-card h3 {font-size: 1.5rem; color: var(--dark); margin-bottom: 1rem;}
         .feature-card p {color: var(--gray); line-height: 1.6;}
         /* 系统优势 */
         .advantage {padding: 8rem 0; background: var(--light);}
         .advantage-content {display: flex; align-items: center; gap: 4rem;}
-        .advantage-img {flex: 1;}
+        .advantage-img {flex: 1; animation: fadeInUp 1s ease-out;}
+        @keyframes fadeInUp {from {opacity: 0; transform: translateY(30px);} to {opacity: 1; transform: translateY(0);}}
         .advantage-img img {width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);}
-        .advantage-text {flex: 1;}
+        .advantage-text {flex: 1; animation: fadeInDown 1s ease-out;}
+        @keyframes fadeInDown {from {opacity: 0; transform: translateY(-30px);} to {opacity: 1; transform: translateY(0);}}
         .advantage-text h3 {font-size: 2rem; color: var(--dark); margin-bottom: 2rem;}
-        .advantage-item {display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem;}
-        .advantage-item i {font-size: 1.5rem; color: var(--primary); margin-top: 0.5rem;}
+        .advantage-item {display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s;}
+        .advantage-item:hover {transform: translateX(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.08);}
+        .advantage-item i {font-size: 1.5rem; color: var(--primary); margin-top: 0.5rem; flex-shrink: 0;}
         .advantage-item div h4 {font-size: 1.2rem; color: var(--dark); margin-bottom: 0.5rem;}
         .advantage-item div p {color: var(--gray); line-height: 1.6;}
         /* 下载入口 */
         .download {padding: 8rem 0; background: white; text-align: center;}
-        .download-card {display: inline-block; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 4rem 6rem; border-radius: 16px; box-shadow: 0 15px 30px rgba(22,93,255,0.2);}
+        .download-card {display: inline-block; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 4rem 6rem; border-radius: 16px; box-shadow: 0 15px 30px rgba(22,93,255,0.2); transition: all 0.3s;}
+        .download-card:hover {transform: translateY(-5px); box-shadow: 0 20px 40px rgba(22,93,255,0.3);}
         .download-card h3 {font-size: 2.2rem; margin-bottom: 1rem;}
         .download-card p {font-size: 1.1rem; margin-bottom: 3rem; opacity: 0.9;}
         .download-btns {display: flex; gap: 2rem; justify-content: center;}
-        .download-btn {background: white; color: var(--primary); padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600; transition: all 0.3s;}
-        .download-btn:hover {transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);}
+        .download-btn {background: white; color: var(--primary); padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;}
+        .download-btn:hover {transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); background: #f8f9ff;}
         /* 页脚 */
         .footer {padding: 4rem 0 2rem; background: var(--dark); color: white;}
         .footer-content {display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem;}
         .footer-logo {font-size: 1.8rem; font-weight: 700; color: white; margin-bottom: 1rem;}
         .footer-desc {color: #c0c4cc; line-height: 1.6; margin-bottom: 2rem;}
         .footer-social {display: flex; gap: 1.5rem;}
-        .footer-social a {font-size: 1.5rem; color: #c0c4cc; transition: color 0.3s;}
-        .footer-social a:hover {color: var(--primary);}
-        .footer-col h4 {font-size: 1.2rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary);}
+        .footer-social a {font-size: 1.5rem; color: #c0c4cc; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05);}
+        .footer-social a:hover {color: var(--primary); transform: translateY(-3px); background: rgba(255,255,255,0.1);}
+        .footer-col h4 {font-size: 1.2rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary); color: white;}
         .footer-col ul li {margin-bottom: 1rem;}
-        .footer-col ul li a {color: #c0c4cc; transition: color 0.3s;}
+        .footer-col ul li a {color: #c0c4cc; transition: color 0.3s; position: relative; padding-left: 15px;}
         .footer-col ul li a:hover {color: var(--primary);}
+        .footer-col ul li a::before {content: '→'; position: absolute; left: 0; color: var(--primary); opacity: 0; transition: opacity 0.3s, transform 0.3s;}
+        .footer-col ul li a:hover::before {opacity: 1; transform: translateX(5px);}
         .footer-copyright {text-align: center; color: #c0c4cc; padding-top: 2rem; border-top: 1px solid #333;}
+        /* 回到顶部按钮 */
+        .back-to-top {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s; box-shadow: 0 4px 12px rgba(22,93,255,0.3); z-index: 999;}
+        .back-to-top.active {opacity: 1; visibility: visible;}
+        .back-to-top:hover {background: var(--secondary); transform: translateY(-5px); box-shadow: 0 6px 16px rgba(22,93,255,0.4);}
         /* 响应式适配 */
         @media (max-width: 992px) {
-            .banner {flex-direction: column; height: auto; padding: 4rem 0; text-align: center;}
+            .banner {flex-direction: column; text-align: center;}
             .banner-content {margin-bottom: 3rem;}
             .banner-btns {justify-content: center;}
             .features-list {grid-template-columns: repeat(2, 1fr);}
@@ -85,13 +106,29 @@
             .footer-content {grid-template-columns: repeat(2, 1fr);}
         }
         @media (max-width: 768px) {
-            .nav-menu {display: none;}
+            .nav-menu {display: none; position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: white; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; transition: right 0.3s ease; box-shadow: -4px 0 12px rgba(0,0,0,0.1);}
+            .nav-menu.active {right: 0;}
+            .nav-menu a {font-size: 1.2rem; color: var(--dark);}
+            .nav-btn {padding: 0.4rem 1.2rem; font-size: 0.9rem;}
             .mobile-menu {display: block;}
             .banner-title {font-size: 2.2rem;}
             .section-title {font-size: 2rem;}
             .features-list {grid-template-columns: 1fr;}
             .download-card {padding: 3rem 2rem;}
-            .download-btns {flex-direction: column;}
+            .download-btns {flex-direction: column; align-items: center;}
+            .download-btn {width: 100%; max-width: 250px; justify-content: center;}
+            .advantage-item {flex-direction: column; align-items: flex-start; gap: 1rem;}
+            .advantage-item i {margin-top: 0;}
+            .footer-content {grid-template-columns: 1fr; gap: 2rem;}
+            .back-to-top {width: 40px; height: 40px; bottom: 20px; right: 20px;}
+        }
+        @media (max-width: 576px) {
+            .banner-title {font-size: 1.8rem;}
+            .section-title {font-size: 1.8rem;}
+            .nav-logo {font-size: 1.5rem;}
+            .nav-btn {padding: 0.3rem 1rem; font-size: 0.8rem;}
+            .banner-btns {flex-direction: column; align-items: center; gap: 1rem;}
+            .btn-primary, .btn-outline {width: 100%; max-width: 200px; text-align: center;}
         }
     </style>
     <!-- 引入图标库 -->
@@ -126,8 +163,7 @@
                 </div>
             </div>
             <div class="banner-img">
-                <img src="https://cdn.bootcdn.net/ajax/libs/psd/3.0.0/psd.png" alt="Chindows系统界面">
-                <!-- 可替换为真实的系统截图地址 -->
+                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20operating%20system%20interface%20with%20clean%20design%2C%20blue%20theme%2C%20desktop%20environment%2C%20professional%20UI&image_size=landscape_16_9" alt="Chindows系统界面">
             </div>
         </div>
     </section>
@@ -177,7 +213,7 @@
         <div class="container">
             <div class="advantage-content">
                 <div class="advantage-img">
-                    <img src="https://cdn.bootcdn.net/ajax/libs/psd/3.0.0/psd.png" alt="Chindows系统优势">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=operating%20system%20advantages%20infographic%2C%20performance%20metrics%2C%20security%20features%2C%20modern%20design&image_size=landscape_16_9" alt="Chindows系统优势">
                 </div>
                 <div class="advantage-text">
                     <h3>为什么选择Chindows？</h3>
@@ -276,29 +312,98 @@
         </div>
     </footer>
 
+    <!-- 回到顶部按钮 -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
     <script>
-        // 移动端菜单切换（简易版）
+        // 移动端菜单切换
         const mobileMenu = document.querySelector('.mobile-menu');
         const navMenu = document.querySelector('.nav-menu');
         mobileMenu.addEventListener('click', () => {
-            navMenu.style.display = navMenu.style.display === 'block' ? 'none' : 'block';
-            navMenu.style.position = 'absolute';
-            navMenu.style.top = '70px';
-            navMenu.style.left = '0';
-            navMenu.style.right = '0';
-            navMenu.style.background = 'white';
-            navMenu.style.padding = '2rem';
-            navMenu.style.flexDirection = 'column';
-            navMenu.style.gap = '1.5rem';
+            mobileMenu.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
+        
+        // 点击导航链接关闭移动端菜单
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+        
         // 平滑滚动
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // 回到顶部按钮
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 卡片动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // 观察所有卡片元素
+        document.querySelectorAll('.feature-card, .advantage-item').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // 页面加载完成后的初始化
+        window.addEventListener('load', () => {
+            // 添加加载完成的类
+            document.body.classList.add('loaded');
+            
+            // 初始化滚动位置
+            window.scrollTo(0, 0);
         });
     </script>
 </body>
