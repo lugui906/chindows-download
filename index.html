@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chindows - 轻量高效的新一代多端融合操作系统，集Windows易用性与Linux稳定性于一体，适配PC">
+    <meta name="keywords" content="Chindows,操作系统,轻量,高效,Linux,Windows,开源">
+    <meta name="author" content="Chindows开源团队">
+    <title>Chindows - 轻量高效，新一代多端操作系统</title>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif;}
+        :root {--primary: #E60012; --secondary: #C40010; --accent: #FFD700; --light: #FFF8F0; --dark: #333333; --gray: #666666;}
+        a {text-decoration: none; color: inherit;}
+        ul {list-style: none;}
+        .container {width: 90%; max-width: 1200px; margin: 0 auto;}
+        /* 导航栏 */
+        .nav {padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.3s ease;}
+        .nav.scrolled {background: rgba(255,255,255,0.98); box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
+        .nav-logo {font-size: 1.8rem; font-weight: 700; color: var(--primary);}
+        .nav-menu {display: flex; gap: 2rem;}
+        .nav-menu a {font-size: 1rem; color: var(--dark); transition: color 0.3s; position: relative;}
+        .nav-menu a:hover {color: var(--primary);}
+        .nav-menu a::after {content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.3s;}
+        .nav-menu a:hover::after {width: 100%;}
+        .nav-btn {background: var(--primary); color: white; padding: 0.5rem 1.5rem; border-radius: 4px; border: none; cursor: pointer; transition: all 0.3s; font-weight: 600;}
+        .nav-btn:hover {background: var(--secondary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(22,93,255,0.2);}
+        .mobile-menu {display: none; font-size: 1.5rem; cursor: pointer; z-index: 1000;}
+        .mobile-menu.active i {color: var(--primary);}
+        /* Banner区 */
+        .banner {margin-top: 70px; min-height: calc(100vh - 70px); background: linear-gradient(135deg, var(--light) 0%, #fff0f0 100%); display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden;}
+        .banner::before {content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="50" y="50" font-size="20" text-anchor="middle" dy=".3em" fill="%23ffd70020">龙</text></svg>'); background-repeat: repeat; opacity: 0.1;}
+        .banner-content {flex: 1; animation: fadeInLeft 1s ease-out;}
+        @keyframes fadeInLeft {from {opacity: 0; transform: translateX(-30px);} to {opacity: 1; transform: translateX(0);}}
+        .banner-title {font-size: 3rem; line-height: 1.3; color: var(--dark); margin-bottom: 1rem;}
+        .banner-title span {color: var(--primary);}
+        .banner-desc {font-size: 1.2rem; color: var(--gray); line-height: 1.6; margin-bottom: 2rem; max-width: 600px;}
+        .banner-btns {display: flex; gap: 1.5rem;}
+        .btn-primary {background: var(--primary); color: white; padding: 0.8rem 2rem; border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
+        .btn-primary:hover {background: var(--secondary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(22,93,255,0.3);}
+        .btn-outline {background: transparent; color: var(--primary); padding: 0.8rem 2rem; border: 2px solid var(--primary); border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
+        .btn-outline:hover {background: var(--primary); color: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(22,93,255,0.3);}
+        .banner-img {flex: 1; text-align: right; animation: fadeInRight 1s ease-out;}
+        @keyframes fadeInRight {from {opacity: 0; transform: translateX(30px);} to {opacity: 1; transform: translateX(0);}}
+        .banner-img img {width: 90%; max-width: 500px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.5s;}
+        .banner-img img:hover {transform: scale(1.02);}
+        /* 核心特性 */
+        .features {padding: 8rem 0; background: white;}
+        .section-title {text-align: center; font-size: 2.5rem; color: var(--dark); margin-bottom: 1rem; position: relative;}
+        .section-title::after {content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: var(--primary); border-radius: 2px;}
+        .section-desc {text-align: center; color: var(--gray); font-size: 1.1rem; max-width: 700px; margin: 0 auto 4rem;}
+        .features-list {display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;}
+        .feature-card {padding: 2rem; background: var(--light); border-radius: 8px; transition: all 0.3s; border: 1px solid rgba(0,0,0,0.05);}
+        .feature-card:hover {transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0,0,0,0.08);}
+        .feature-card i {font-size: 2.5rem; color: var(--primary); margin-bottom: 1.5rem; display: block;}
+        .feature-card h3 {font-size: 1.5rem; color: var(--dark); margin-bottom: 1rem;}
+        .feature-card p {color: var(--gray); line-height: 1.6;}
+        /* 系统优势 */
+        .advantage {padding: 8rem 0; background: var(--light);}
+        .advantage-content {display: flex; align-items: center; gap: 4rem;}
+        .advantage-text {flex: 1 1 100%; animation: fadeInDown 1s ease-out;}
+        .advantage-img {flex: 1; animation: fadeInUp 1s ease-out;}
+        @keyframes fadeInUp {from {opacity: 0; transform: translateY(30px);} to {opacity: 1; transform: translateY(0);}}
+        @keyframes fadeInDown {from {opacity: 0; transform: translateY(-30px);} to {opacity: 1; transform: translateY(0);}}
+        .advantage-text h3 {font-size: 2rem; color: var(--dark); margin-bottom: 2rem;}
+        .advantage-item {display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s;}
+        .advantage-item:hover {transform: translateX(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.08);}
+        .advantage-item i {font-size: 1.5rem; color: var(--primary); margin-top: 0.5rem; flex-shrink: 0;}
+        .advantage-item div h4 {font-size: 1.2rem; color: var(--dark); margin-bottom: 0.5rem;}
+        .advantage-item div p {color: var(--gray); line-height: 1.6;}
+        /* 下载入口 */
+        .download {padding: 8rem 0; background: white; text-align: center;}
+        .download-card {display: inline-block; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 4rem 6rem; border-radius: 16px; box-shadow: 0 15px 30px rgba(22,93,255,0.2); transition: all 0.3s;}
+        .download-card:hover {transform: translateY(-5px); box-shadow: 0 20px 40px rgba(22,93,255,0.3);}
+        .download-card h3 {font-size: 2.2rem; margin-bottom: 1rem;}
+        .download-card p {font-size: 1.1rem; margin-bottom: 3rem; opacity: 0.9;}
+        .download-btns {display: flex; gap: 2rem; justify-content: center;}
+        .download-btn {background: white; color: var(--primary); padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;}
+        .download-btn:hover {transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); background: #f8f9ff;}
+        /* 页脚 */
+        .footer {padding: 4rem 0 2rem; background: var(--dark); color: white;}
+        .footer-content {display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem;}
+        .footer-logo {font-size: 1.8rem; font-weight: 700; color: white; margin-bottom: 1rem;}
+        .footer-desc {color: #c0c4cc; line-height: 1.6; margin-bottom: 2rem;}
+        .footer-social {display: flex; gap: 1.5rem;}
+        .footer-social a {font-size: 1.5rem; color: #c0c4cc; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05);}
+        .footer-social a:hover {color: var(--primary); transform: translateY(-3px); background: rgba(255,255,255,0.1);}
+        .footer-col h4 {font-size: 1.2rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary); color: white;}
+        .footer-col ul li {margin-bottom: 1rem;}
+        .footer-col ul li a {color: #c0c4cc; transition: color 0.3s; position: relative; padding-left: 15px;}
+        .footer-col ul li a:hover {color: var(--primary);}
+        .footer-col ul li a::before {content: '→'; position: absolute; left: 0; color: var(--primary); opacity: 0; transition: opacity 0.3s, transform 0.3s;}
+        .footer-col ul li a:hover::before {opacity: 1; transform: translateX(5px);}
+        .footer-copyright {text-align: center; color: #c0c4cc; padding-top: 2rem; border-top: 1px solid #333;}
+        /* 回到顶部按钮 */
+        .back-to-top {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s; box-shadow: 0 4px 12px rgba(22,93,255,0.3); z-index: 999;}
+        .back-to-top.active {opacity: 1; visibility: visible;}
+        .back-to-top:hover {background: var(--secondary); transform: translateY(-5px); box-shadow: 0 6px 16px rgba(22,93,255,0.4);}
+        /* 响应式适配 */
+        @media (max-width: 992px) {
+            .banner {flex-direction: column; text-align: center;}
+            .banner-content {margin-bottom: 3rem;}
+            .banner-btns {justify-content: center;}
+            .features-list {grid-template-columns: repeat(2, 1fr);}
+            .advantage-content {flex-direction: column;}
+            .advantage-img {margin-bottom: 3rem;}
+            .footer-content {grid-template-columns: repeat(2, 1fr);}
+        }
+        @media (max-width: 768px) {
+            .nav-menu {display: none; position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: white; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; transition: right 0.3s ease; box-shadow: -4px 0 12px rgba(0,0,0,0.1);}
+            .nav-menu.active {right: 0;}
+            .nav-menu a {font-size: 1.2rem; color: var(--dark);}
+            .nav-btn {padding: 0.4rem 1.2rem; font-size: 0.9rem;}
+            .mobile-menu {display: block;}
+            .banner-title {font-size: 2.2rem;}
+            .section-title {font-size: 2rem;}
+            .features-list {grid-template-columns: 1fr;}
+            .download-card {padding: 3rem 2rem;}
+            .download-btns {flex-direction: column; align-items: center;}
+            .download-btn {width: 100%; max-width: 250px; justify-content: center;}
+            .advantage-item {flex-direction: column; align-items: flex-start; gap: 1rem;}
+            .advantage-item i {margin-top: 0;}
+            .footer-content {grid-template-columns: 1fr; gap: 2rem;}
+            .back-to-top {width: 40px; height: 40px; bottom: 20px; right: 20px;}
+        }
+        @media (max-width: 576px) {
+            .banner-title {font-size: 1.8rem;}
+            .section-title {font-size: 1.8rem;}
+            .nav-logo {font-size: 1.5rem;}
+            .nav-btn {padding: 0.3rem 1rem; font-size: 0.8rem;}
+            .banner-btns {flex-direction: column; align-items: center; gap: 1rem;}
+            .btn-primary, .btn-outline {width: 100%; max-width: 200px; text-align: center;}
+        }
+    </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-logo">Chindows</div>
+            <ul class="nav-menu">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#features">核心特性</a></li>
+                <li><a href="#advantage">系统优势</a></li>
+                <li><a href="#download">下载</a></li>
+                <li><a href="#feedback">反馈</a></li>
+                <li><a href="#about">关于</a></li>
+            </ul>
+            <button class="nav-btn">了解更多</button>
+            <div class="mobile-menu"><i class="fas fa-bars"></i></div>
+        </div>
+    </nav>
+
+    <!-- Banner区 -->
+    <section class="banner" id="home">
+        <div class="container">
+            <div class="banner-content">
+                <h1 class="banner-title">Chindows <span>新年快乐</span><br>龙年大吉 • 万事如意</h1>
+                <p class="banner-desc">在新的一年里，Chindows祝大家龙马精神，事业有成！轻量高效的操作系统，为您的工作生活增添动力。</p>
+                <div class="banner-btns">
+                    <a href="#download" class="btn-primary">立即下载</a>
+                    <a href="#features" class="btn-outline">了解更多</a>
+                </div>
+            </div>
+            <div class="banner-img" style="display: none;"></div>
+        </div>
+    </section>
+
+    <!-- 核心特性 -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">龙年专属特性</h2>
+            <p class="section-desc">在新的一年里，Chindows为您带来更轻量、更高效的使用体验，助力您在龙年事业腾飞，万事如意</p>
+            <div class="features-list">
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>极致轻量</h3>
+                    <p>最小安装包仅4GB，运行内存占用低至512M，老旧设备也能流畅运行，无卡顿无冗余。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-halved"></i>
+                    <h3>安全稳定</h3>
+                    <p>必须UEFI启动+基于Linux内核的安全架构，自带防火墙和病毒防护，底层权限隔离，杜绝恶意程序入侵。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-microchip"></i>
+                    <h3>架构支持</h3>
+                    <p>专注支持x86_64架构，针对现代PC硬件优化，提供最佳性能体验。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <h3>极简交互</h3>
+                    <p>融合Windows经典操作逻辑，界面简洁直观，新手快速上手，老用户无需适应。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-code"></i>
+                    <h3>开发者友好</h3>
+                    <p>内置包管理工具，一键安装开发环境，支持Python、Java、C++等主流编程语言，兼容Docker。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>兼容生态</h3>
+                    <p>完美兼容Windows常用软件和Linux命令行，无需额外配置，直接运行原有程序。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>内置AI助手</h3>
+                    <p>集成智能AI助手，提供语音交互、系统管理、应用推荐等智能服务，提升使用体验。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-glass-cheers"></i>
+                    <h3>Wine兼容层</h3>
+                    <p>内置Wine兼容层，无需额外配置即可运行Windows应用程序，扩展软件生态。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-th-large"></i>
+                    <h3>丰富内置应用</h3>
+                    <p>预装常用办公、娱乐、开发工具，开箱即用，满足日常使用需求。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 系统优势 -->
+    <section class="advantage" id="advantage">
+        <div class="container">
+            <div class="advantage-content">
+                <div class="advantage-img" style="display: none;"></div>
+                <div class="advantage-text">
+                    <h3>龙年首选操作系统</h3>
+                    <div class="advantage-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>低资源占用，高性能</h4>
+                            <p>相比传统系统，CPU占用降低40%，内存占用降低60%，开机速度快至5秒，多任务运行无压力。</p>
+                        </div>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>开源免费，无广告</h4>
+                            <p>核心代码开源，个人和企业可免费使用，无内置广告，无强制更新，完全掌控自己的系统。</p>
+                        </div>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>灵活定制，高度可扩展</h4>
+                            <p>支持自定义桌面、主题、快捷键，可根据需求安装插件和扩展，打造专属个性化系统。</p>
+                        </div>
+                    </div>
+                    <div class="advantage-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>专注核心体验</h4>
+                            <p>专注于提供稳定可靠的系统体验，精简不必要的功能，确保系统轻量高效。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载入口 -->
+    <section class="download" id="download">
+        <div class="container">
+            <div class="download-card">
+                <h3>龙年特别版下载</h3>
+                <p>新年新气象，Chindows龙年特别版为您带来全新体验</p>
+                <div class="download-btns">
+                    <a href="https://feishu.doubao.com/drive/file/PoDabH8QposY0VxrErqc08zNn2b" target="_blank" class="download-btn"><i class="fas fa-download"></i> 下载ISO镜像</a>
+                    <a href="https://lugui906.github.io/up/" target="_blank" class="download-btn"><i class="fas fa-sync-alt"></i> 下载更新包</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 反馈功能 -->
+    <section class="feedback" id="feedback" style="padding: 8rem 0; background: var(--light);">
+        <div class="container">
+            <h2 class="section-title">新年反馈</h2>
+            <p class="section-desc">在新的一年里，您的反馈是我们前进的动力，帮助我们不断完善Chindows操作系统</p>
+            <div style="max-width: 700px; margin: 0 auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <form id="feedbackForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">姓名</label>
+                            <input type="text" id="name" name="name" placeholder="请输入您的姓名" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">邮箱</label>
+                            <input type="email" id="email" name="email" placeholder="请输入您的邮箱" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="subject" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">主题</label>
+                        <input type="text" id="subject" name="subject" placeholder="请输入反馈主题" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                    </div>
+                    <div>
+                        <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">反馈内容</label>
+                        <textarea id="message" name="message" rows="5" placeholder="请详细描述您的问题或建议" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="align-self: flex-start; cursor: pointer;">提交反馈</button>
+                </form>
+                <div id="feedbackSuccess" style="display: none; margin-top: 2rem; padding: 1rem; background: #d4edda; color: #155724; border-radius: 4px; text-align: center;">
+                    <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                    <p>反馈提交成功！我们会尽快处理您的反馈。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer" id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <div class="footer-logo">Chindows</div>
+                    <p class="footer-desc">Chindows是一款轻量高效的操作系统，专注于x86_64架构，提供稳定可靠的使用体验，让技术更贴近生活。</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>快速链接</h4>
+                    <ul>
+                        <li><a href="#home">首页</a></li>
+                        <li><a href="#features">核心特性</a></li>
+                        <li><a href="#advantage">系统优势</a></li>
+                        <li><a href="#download">下载中心</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>开发文档</h4>
+                    <ul>
+                        <li><a href="#">安装教程</a></li>
+                        <li><a href="#">兼容列表</a></li>
+                        <li><a href="#">常见问题</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>关于我们</h4>
+                    <ul>
+                        <li><a href="#">团队介绍</a></li>
+                        <li><a href="#">加入我们</a></li>
+                        <li><a href="#">联系我们</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                © 2026 Chindows开源团队 版权所有 | 基于MIT开源协议<br>
+                <span style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem; display: block;">龙年大吉 • 万事如意 • 新年快乐</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // 移动端菜单切换
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navMenu = document.querySelector('.nav-menu');
+        mobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // 点击导航链接关闭移动端菜单
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        // 回到顶部按钮
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 卡片动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // 观察所有卡片元素
+        document.querySelectorAll('.feature-card, .advantage-item').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // 反馈表单提交处理
+        const feedbackForm = document.getElementById('feedbackForm');
+        const feedbackSuccess = document.getElementById('feedbackSuccess');
+        
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 简单的表单验证
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                if (name && email && subject && message) {
+                    // 模拟表单提交
+                    setTimeout(() => {
+                        feedbackForm.reset();
+                        feedbackSuccess.style.display = 'block';
+                        
+                        // 5秒后隐藏成功消息
+                        setTimeout(() => {
+                            feedbackSuccess.style.display = 'none';
+                        }, 5000);
+                    }, 1000);
+                }
+            });
+        }
+        
+        // 页面加载完成后的初始化
+        window.addEventListener('load', () => {
+            // 添加加载完成的类
+            document.body.classList.add('loaded');
+            
+            // 初始化滚动位置
+            window.scrollTo(0, 0);
+        });
+    </script>
+</body>
+</html>
