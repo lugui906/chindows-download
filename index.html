@@ -9,7 +9,7 @@
     <title>Chindows - 轻量高效，新一代多端操作系统</title>
     <style>
         * {margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif;}
-        :root {--primary: #E60012; --secondary: #C40010; --accent: #FFD700; --light: #FFF8F0; --dark: #333333; --gray: #666666;}
+        :root {--primary: #E63946; --secondary: #1D3557; --light: #F1FAEE; --dark: #1D3557; --gray: #457B9D; --gold: #FFD700; --red: #E63946;}
         a {text-decoration: none; color: inherit;}
         ul {list-style: none;}
         .container {width: 90%; max-width: 1200px; margin: 0 auto;}
@@ -27,18 +27,31 @@
         .mobile-menu {display: none; font-size: 1.5rem; cursor: pointer; z-index: 1000;}
         .mobile-menu.active i {color: var(--primary);}
         /* Banner区 */
-        .banner {margin-top: 70px; min-height: calc(100vh - 70px); background: linear-gradient(135deg, var(--light) 0%, #fff0f0 100%); display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden;}
-        .banner::before {content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="50" y="50" font-size="20" text-anchor="middle" dy=".3em" fill="%23ffd70020">龙</text></svg>'); background-repeat: repeat; opacity: 0.1;}
+        .banner {margin-top: 70px; min-height: calc(100vh - 70px); background: linear-gradient(135deg, var(--red) 0%, #C1121F 100%); display: flex; align-items: center; padding: 4rem 0; position: relative; overflow: hidden;}
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            z-index: 0;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 1;
+        }
         .banner-content {flex: 1; animation: fadeInLeft 1s ease-out;}
         @keyframes fadeInLeft {from {opacity: 0; transform: translateX(-30px);} to {opacity: 1; transform: translateX(0);}}
-        .banner-title {font-size: 3rem; line-height: 1.3; color: var(--dark); margin-bottom: 1rem;}
-        .banner-title span {color: var(--primary);}
-        .banner-desc {font-size: 1.2rem; color: var(--gray); line-height: 1.6; margin-bottom: 2rem; max-width: 600px;}
+        .banner-title {font-size: 3rem; line-height: 1.3; color: white; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);}
+        .banner-title span {color: var(--gold);}
+        .banner-desc {font-size: 1.2rem; color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 2rem; max-width: 600px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);}
         .banner-btns {display: flex; gap: 1.5rem;}
-        .btn-primary {background: var(--primary); color: white; padding: 0.8rem 2rem; border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
-        .btn-primary:hover {background: var(--secondary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(22,93,255,0.3);}
-        .btn-outline {background: transparent; color: var(--primary); padding: 0.8rem 2rem; border: 2px solid var(--primary); border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
-        .btn-outline:hover {background: var(--primary); color: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(22,93,255,0.3);}
+        .btn-primary {background: var(--gold); color: #8B4513; padding: 0.8rem 2rem; border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
+        .btn-primary:hover {background: #FFA500; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,215,0,0.4);}
+        .btn-outline {background: transparent; color: white; padding: 0.8rem 2rem; border: 2px solid white; border-radius: 4px; font-size: 1rem; transition: all 0.3s; font-weight: 600;}
+        .btn-outline:hover {background: white; color: var(--red); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.3);}
         .banner-img {flex: 1; text-align: right; animation: fadeInRight 1s ease-out;}
         @keyframes fadeInRight {from {opacity: 0; transform: translateX(30px);} to {opacity: 1; transform: translateX(0);}}
         .banner-img img {width: 90%; max-width: 500px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: transform 0.5s;}
@@ -156,8 +169,8 @@
     <section class="banner" id="home">
         <div class="container">
             <div class="banner-content">
-                <h1 class="banner-title">Chindows <span>新年快乐</span><br>龙年大吉 • 万事如意</h1>
-                <p class="banner-desc">在新的一年里，Chindows祝大家龙马精神，事业有成！轻量高效的操作系统，为您的工作生活增添动力。</p>
+                <h1 class="banner-title">新春快乐 <span>马年大吉</span><br>Chindows 与您共庆新年</h1>
+                <p class="banner-desc">2026年马年到来，Chindows祝大家龙马精神、万事如意！轻量高效的操作系统，陪您开启新的一年。</p>
                 <div class="banner-btns">
                     <a href="#download" class="btn-primary">立即下载</a>
                     <a href="#features" class="btn-outline">了解更多</a>
@@ -170,8 +183,8 @@
     <!-- 核心特性 -->
     <section class="features" id="features">
         <div class="container">
-            <h2 class="section-title">龙年专属特性</h2>
-            <p class="section-desc">在新的一年里，Chindows为您带来更轻量、更高效的使用体验，助力您在龙年事业腾飞，万事如意</p>
+            <h2 class="section-title">核心特性 <span style="color: var(--red);">· 马年特别版</span></h2>
+            <p class="section-desc">2026马年特别版，Chindows基于开源内核深度定制，兼顾性能与体验，为您的新年增添科技力量</p>
             <div class="features-list">
                 <div class="feature-card">
                     <i class="fas fa-bolt"></i>
@@ -228,7 +241,7 @@
             <div class="advantage-content">
                 <div class="advantage-img" style="display: none;"></div>
                 <div class="advantage-text">
-                    <h3>龙年首选操作系统</h3>
+                    <h3>为什么选择Chindows？</h3>
                     <div class="advantage-item">
                         <i class="fas fa-check-circle"></i>
                         <div>
@@ -266,8 +279,8 @@
     <section class="download" id="download">
         <div class="container">
             <div class="download-card">
-                <h3>龙年特别版下载</h3>
-                <p>新年新气象，Chindows龙年特别版为您带来全新体验</p>
+                <h3>马年特别版 · 获取Chindows</h3>
+                <p>2026马年特别版，支持x86_64架构，祝您新年新气象</p>
                 <div class="download-btns">
                     <a href="https://feishu.doubao.com/drive/file/PoDabH8QposY0VxrErqc08zNn2b" target="_blank" class="download-btn"><i class="fas fa-download"></i> 下载ISO镜像</a>
                     <a href="https://lugui906.github.io/up/" target="_blank" class="download-btn"><i class="fas fa-sync-alt"></i> 下载更新包</a>
@@ -279,8 +292,8 @@
     <!-- 反馈功能 -->
     <section class="feedback" id="feedback" style="padding: 8rem 0; background: var(--light);">
         <div class="container">
-            <h2 class="section-title">新年反馈</h2>
-            <p class="section-desc">在新的一年里，您的反馈是我们前进的动力，帮助我们不断完善Chindows操作系统</p>
+            <h2 class="section-title">用户反馈</h2>
+            <p class="section-desc">您的反馈对我们非常重要，帮助我们不断改进和优化Chindows操作系统</p>
             <div style="max-width: 700px; margin: 0 auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
                 <form id="feedbackForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
@@ -317,7 +330,7 @@
             <div class="footer-content">
                 <div class="footer-col">
                     <div class="footer-logo">Chindows</div>
-                    <p class="footer-desc">Chindows是一款轻量高效的操作系统，专注于x86_64架构，提供稳定可靠的使用体验，让技术更贴近生活。</p>
+                <p class="footer-desc">2026马年特别版，Chindows祝您龙马精神、万事如意！轻量高效的操作系统，让技术更贴近生活。</p>
                     <div class="footer-social">
                         <a href="#"><i class="fab fa-github"></i></a>
                     </div>
@@ -350,8 +363,7 @@
                 </div>
             </div>
             <div class="footer-copyright">
-                © 2026 Chindows开源团队 版权所有 | 基于MIT开源协议<br>
-                <span style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem; display: block;">龙年大吉 • 万事如意 • 新年快乐</span>
+                © 2026 Chindows开源团队 版权所有 | 基于MIT开源协议
             </div>
         </div>
     </footer>
